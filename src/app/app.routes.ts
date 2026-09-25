@@ -42,6 +42,11 @@ export const routes: Routes = [
         title: 'Mon sac · Travel Field Manual',
         loadComponent: () => import('./features/pack/bag/bag').then((m) => m.BagPage),
       },
+      {
+        path: 'comparer',
+        title: 'Comparer · Travel Field Manual',
+        loadComponent: () => import('./features/pack/compare/compare').then((m) => m.Compare),
+      },
     ],
   },
   { path: '**', redirectTo: '' },
