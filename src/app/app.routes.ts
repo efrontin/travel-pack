@@ -7,5 +7,10 @@ export const routes: Routes = [
     title: 'Travel Field Manual',
     loadComponent: () => import('./features/home/home').then((m) => m.Home),
   },
+  {
+    path: 'itineraire',
+    title: 'Itinéraire · Travel Field Manual',
+    loadComponent: () => import('./features/route/route').then((m) => m.RoutePage),
+  },
   { path: '**', redirectTo: '' },
 ];
