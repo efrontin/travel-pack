@@ -17,5 +17,11 @@ export const routes: Routes = [
     title: 'Carnet de voyage · Travel Field Manual',
     loadComponent: () => import('./features/journal/list/journal-list').then((m) => m.JournalList),
   },
+  {
+    path: 'carnet/:id',
+    title: 'Fiche de voyage · Travel Field Manual',
+    loadComponent: () =>
+      import('./features/journal/entry/journal-entry').then((m) => m.JournalEntry),
+  },
   { path: '**', redirectTo: '' },
 ];

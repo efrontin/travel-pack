@@ -1,0 +1,49 @@
+@if (entry(); as e) {
+  <div class="screen">
+    <app-page-header label="CARNET" back="/carnet"
+      ><span class="saved">✓ Enregistré</span></app-page-header
+    >
+    <div class="photo">
+      <app-photo-slot [slotId]="'j-' + e.id" placeholder="Glissez une photo de cette étape" />
+    </div>
+
+    <textarea
+      class="title"
+      appAutoGrow
+      rows="1"
+      aria-label="Titre de la fiche"
+      placeholder="Titre de la fiche"
+      [value]="e.title"
+      (input)="set('title', $event)"
+    ></textarea>
+
+    <div class="meta">
+      <label>
+        <span>DATE</span>
+        <input type="date" [value]="e.date" (input)="set('date', $event)" />
+      </label>
+      <label>
+        <span>ÉTAPE</span>
+        <select (change)="set('stage', $event)">
+          @for (opt of stageOptions(); track opt) {
+            <option [value]="opt" [selected]="opt === e.stage">{{ opt }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <textarea
+      class="text"
+      appAutoGrow
+      aria-label="Texte de la fiche"
+      placeholder="Ce que vous avez vu, mangé, porté de trop ou regretté de ne pas avoir pris…"
+      [value]="e.text"
+      (input)="set('text', $event)"
+    ></textarea>
+
+    <div class="foot">
+      <span>{{ words() }} mots</span>
+      <button type="button" (click)="remove()">Supprimer la fiche</button>
+    </div>
+  </div>
+}
