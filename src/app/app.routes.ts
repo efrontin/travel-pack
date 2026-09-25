@@ -37,6 +37,11 @@ export const routes: Routes = [
         title: 'Ma liste · Travel Field Manual',
         loadComponent: () => import('./features/pack/list/checklist').then((m) => m.Checklist),
       },
+      {
+        path: 'repartition',
+        title: 'Mon sac · Travel Field Manual',
+        loadComponent: () => import('./features/pack/bag/bag').then((m) => m.BagPage),
+      },
     ],
   },
   { path: '**', redirectTo: '' },

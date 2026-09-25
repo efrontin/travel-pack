@@ -1,0 +1,56 @@
+<div class="screen">
+  <app-page-header label="CE QU'IL Y A DANS MON SAC" back="/sac/liste">03 / 03</app-page-header>
+
+  <div class="banner">
+    <app-photo-slot slotId="bag-banner" tone="dark" placeholder="Photo — paysage de destination" />
+    <div class="shade"></div>
+    <div class="banner-text">
+      <span>{{ trip.dest().name.toUpperCase() }} — {{ trip.days() }} JOURS</span>
+      <span class="sub">{{ kg() }} KG · {{ vol() }} / {{ trip.bag().cap }} L</span>
+    </div>
+  </div>
+
+  <div class="gauge" [class.over]="trip.over()">
+    <div class="gauge-head">
+      <span class="caps-muted">POIDS / LIMITE CABINE</span>
+      <span class="value"
+        >{{ kg() }} <small>/ {{ trip.cabinLimitKg }} kg</small></span
+      >
+    </div>
+    <div class="track"><div [style.width.%]="limitPct()"></div></div>
+    <span class="note">{{ note() }}</span>
+  </div>
+
+  <section>
+    <h2 class="section-head">RÉPARTITION PAR COMPARTIMENT</h2>
+    @for (c of comps(); track c.id) {
+      <div class="comp">
+        <button type="button" [attr.aria-expanded]="open() === c.id" (click)="toggle(c.id)">
+          <span class="comp-name">
+            <span>{{ c.name }}</span>
+            <small>{{ c.n }} {{ c.n > 1 ? 'objets' : 'objet' }}</small>
+          </span>
+          <span class="comp-kg">{{ c.kg }}&nbsp;kg</span>
+          <span class="chev" aria-hidden="true">{{ open() === c.id ? '▴' : '▾' }}</span>
+        </button>
+        <div class="bar"><div [style.width.%]="c.pct"></div></div>
+        @if (open() === c.id) {
+          <ul>
+            @for (it of c.items; track it.id) {
+              <li>
+                <span>{{ it.label }}</span
+                ><span>{{ it.g }} g</span>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    }
+  </section>
+
+  <div class="actions">
+    <button appPill variant="outline" compact type="button" (click)="share()">Partager</button>
+    <button appPill variant="outline" compact type="button" (click)="print()">Imprimer</button>
+    <a appPill compact routerLink="/sac/comparer">Comparer ⇄</a>
+  </div>
+</div>
