@@ -26,10 +26,16 @@ export const routes: Routes = [
   {
     path: 'sac',
     children: [
+      { path: '', pathMatch: 'full', redirectTo: 'liste' },
       {
         path: 'preparer',
         title: 'Préparation · Travel Field Manual',
         loadComponent: () => import('./features/pack/prep/prep').then((m) => m.Prep),
+      },
+      {
+        path: 'liste',
+        title: 'Ma liste · Travel Field Manual',
+        loadComponent: () => import('./features/pack/list/checklist').then((m) => m.Checklist),
       },
     ],
   },
