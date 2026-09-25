@@ -1,0 +1,59 @@
+@if (product(); as p) {
+  <div class="screen">
+    <app-page-header label="MATÉRIEL TESTÉ" back="/equipement">{{ index() }}</app-page-header>
+
+    <div class="photo">
+      <app-photo-slot
+        [slotId]="'prod-' + p.id"
+        [placeholder]="'Photo — ' + p.name + ' en situation'"
+      />
+      <span class="note">{{ review()?.n ?? 'FICHE TECHNIQUE' }}</span>
+    </div>
+
+    <div class="title">
+      <h1>{{ p.name }}</h1>
+      <span>{{ p.brand }}</span>
+    </div>
+
+    <div class="stats">
+      @for (s of stats(); track s) {
+        <span>{{ s }}</span>
+      }
+    </div>
+
+    @if (review(); as rv) {
+      <section>
+        <h2 class="caps">CE QUI MARCHE</h2>
+        <ul>
+          @for (l of rv.likes; track l) {
+            <li><i class="plus">+</i>{{ l }}</li>
+          }
+        </ul>
+      </section>
+      <section>
+        <h2 class="caps">CE QUI DÉÇOIT</h2>
+        <ul>
+          @for (l of rv.dislikes; track l) {
+            <li><i class="minus">−</i>{{ l }}</li>
+          }
+        </ul>
+      </section>
+      <section class="verdict">
+        <h2 class="caps">MON VERDICT · POUR QUI ?</h2>
+        <p>{{ rv.verdict }}</p>
+      </section>
+    } @else {
+      <p class="untested">Pas encore testé sur le terrain. Fiche technique seulement.</p>
+    }
+
+    <button
+      appPill
+      type="button"
+      [variant]="inBag() ? 'outline' : 'primary'"
+      (click)="gear.toggle(p, false)"
+    >
+      <span>{{ cta() }}</span
+      ><span>{{ inBag() ? '✓' : '+' }}</span>
+    </button>
+  </div>
+}
