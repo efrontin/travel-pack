@@ -1,0 +1,37 @@
+:host {
+  display: block;
+  height: 100dvh;
+}
+
+.frame {
+  position: relative;
+  height: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.scroller {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding-top: env(safe-area-inset-top);
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+@media print {
+  :host,
+  .frame {
+    height: auto;
+    overflow: visible;
+  }
+  .scroller {
+    overflow: visible;
+  }
+}

@@ -1,0 +1,39 @@
+<div class="screen">
+  <app-page-header label="CARNET DE VOYAGE">{{ count() }} FICHES</app-page-header>
+
+  @if (feat(); as e) {
+    <article class="feat">
+      <div class="feat-photo">
+        <app-photo-slot [slotId]="'j-' + e.id" placeholder="Photo de la fiche" />
+      </div>
+      <a class="feat-body" [routerLink]="['/carnet', e.id]">
+        <h1>{{ e.title }}</h1>
+        <span class="date">{{ e.date }}</span>
+        <p>{{ e.excerpt }}</p>
+      </a>
+      <div class="feat-foot">
+        <span class="tag">{{ e.stage }}</span>
+        <a class="more" [routerLink]="['/carnet', e.id]">Lire et modifier →</a>
+      </div>
+    </article>
+  }
+
+  @if (rest().length) {
+    <section class="rest">
+      <h2 class="section-head">FICHES PRÉCÉDENTES</h2>
+      @for (e of rest(); track e.id) {
+        <div class="row">
+          <div class="thumb">
+            <app-photo-slot [slotId]="'j-' + e.id" placeholder="Photo" compact />
+          </div>
+          <a [routerLink]="['/carnet', e.id]">
+            <span class="date">{{ e.date }} · {{ e.stage }}</span>
+            <span class="title">{{ e.title }}</span>
+          </a>
+        </div>
+      }
+    </section>
+  }
+
+  <button appPill type="button" (click)="add()"><span>Nouvelle fiche</span><span>+</span></button>
+</div>

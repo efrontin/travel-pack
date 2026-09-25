@@ -1,0 +1,52 @@
+<div class="screen">
+  <div class="intro">
+    <span class="caps">ÉQUIPEMENT</span>
+    <h1>Le matériel testé</h1>
+    <p class="lede">Le bon matériel, au bon moment, où que vous alliez.</p>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Catégories">
+    @for (t of tabs; track t) {
+      <button
+        type="button"
+        role="tab"
+        [class.on]="t === tab()"
+        [attr.aria-selected]="t === tab()"
+        (click)="tab.set(t)"
+      >
+        {{ t }}
+      </button>
+    }
+  </div>
+
+  <ul>
+    @for (x of entries(); track x.id) {
+      <li>
+        <div class="thumb">
+          <app-photo-slot [slotId]="'item-' + x.id" [placeholder]="x.name" compact />
+        </div>
+        <a [routerLink]="['/equipement', x.id]">
+          <span class="name">{{ x.name }}</span>
+          <span class="sub">{{ x.brand }}</span>
+          <span class="sub w">
+            {{ weight(x.w) }}
+            @if (x.tested) {
+              <span class="badge">TESTÉ</span>
+            }
+          </span>
+        </a>
+        @let on = gear.isInBag(x);
+        <button
+          type="button"
+          class="toggle"
+          [class.on]="on"
+          [attr.aria-pressed]="on"
+          [attr.aria-label]="(on ? 'Retirer du sac : ' : 'Ajouter au sac : ') + x.name"
+          (click)="gear.toggle(x)"
+        >
+          {{ on ? '✓' : '+' }}
+        </button>
+      </li>
+    }
+  </ul>
+</div>

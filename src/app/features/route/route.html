@@ -1,0 +1,63 @@
+<app-page-header class="head" label="ITINÉRAIRE">{{ count() }} ÉTAPES</app-page-header>
+<app-route-map />
+
+<div class="body">
+  <div class="stages">
+    @for (stage of rows(); track stage.id) {
+      <div class="stage">
+        <span class="n">{{ stage.n }}</span>
+        <span class="name">
+          <span>{{ stage.name }}</span>
+          <small>{{ stage.sub }}</small>
+        </span>
+        <span class="actions">
+          <app-stepper [value]="stage.days" (valueChange)="route.setDays(stage.id, $event)" />
+          <button
+            type="button"
+            class="write"
+            aria-label="Écrire une fiche"
+            (click)="write(stage.name)"
+          >
+            ✎
+          </button>
+          <button
+            type="button"
+            class="remove"
+            aria-label="Retirer l'étape"
+            (click)="route.remove(stage.id)"
+          >
+            ×
+          </button>
+        </span>
+      </div>
+    } @empty {
+      <p class="empty">Aucune étape pour l'instant. Ajoutez votre première ville ci-dessous.</p>
+    }
+  </div>
+
+  <div class="totals">
+    <div>
+      <span>À VOL D'OISEAU</span>
+      <strong>{{ km() }} km</strong>
+    </div>
+    <div>
+      <span>DURÉE TOTALE</span>
+      <strong>{{ route.totalDays() }} jours</strong>
+    </div>
+  </div>
+
+  @if (route.remaining().length) {
+    <div class="field">
+      <span class="caps-muted">AJOUTER UNE ÉTAPE</span>
+      <div class="chips">
+        @for (place of route.remaining(); track place.id) {
+          <button appChip type="button" (click)="route.add(place.id)">+ {{ place.name }}</button>
+        }
+      </div>
+    </div>
+  }
+
+  <button appPill type="button" (click)="useDays()">
+    <span>Préparer le sac pour {{ route.totalDays() }} jours</span><span>→</span>
+  </button>
+</div>

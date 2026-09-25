@@ -1,0 +1,54 @@
+<div class="screen">
+  <app-page-header label="COMPARER DEUX SACS" back="/sac/repartition" />
+
+  <div class="intro">
+    <h1>Même contenu, deux sacs.</h1>
+    <p class="lede">Votre liste actuelle ({{ trip.count() }} objets) chargée dans chaque sac.</p>
+  </div>
+
+  <div class="field">
+    <span class="caps-muted">COMPARER AVEC</span>
+    <div class="chips">
+      @for (b of options(); track b.id) {
+        <button
+          appChip
+          type="button"
+          [active]="b.id === trip.cmpBag().id"
+          (click)="trip.setCmpBag(b.id)"
+        >
+          {{ b.name }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">
+          <span class="k current">SAC ACTUEL</span><span class="name">{{ trip.bag().name }}</span>
+        </th>
+        <th scope="col">
+          <span class="k">ALTERNATIVE</span><span class="name">{{ trip.cmpBag().name }}</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (r of rows(); track r.label) {
+        <tr>
+          @for (c of r.cells; track $index) {
+            <td [class.best]="c.best">
+              <span class="label">{{ r.label }}</span>
+              <span class="v">{{ c.v }}</span>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <button appPill type="button" (click)="swap()">
+    <span>Partir avec {{ trip.cmpBag().name.toLowerCase() }}</span
+    ><span>→</span>
+  </button>
+</div>

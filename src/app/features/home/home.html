@@ -1,0 +1,49 @@
+<section class="hero">
+  <app-photo-slot
+    class="photo"
+    slotId="hero"
+    tone="dark"
+    placeholder="Photo héro — voyageur face au mont Fuji"
+  />
+  <div class="shade"></div>
+  <div class="content">
+    <div class="bar">
+      <div class="brand">
+        <app-logo />
+        <span>TRAVEL<br />FIELD MANUAL</span>
+      </div>
+      <button type="button" class="burger" aria-label="Menu" (click)="ui.menuOpen.set(true)">
+        <i></i><i></i><i></i>
+      </button>
+    </div>
+    <div class="headline">
+      <h1>VOYAGER LÉGER.<br />ALLER LOIN.</h1>
+      <div class="coords">{{ trip.dest().lat }}<br />{{ trip.dest().lng }}</div>
+    </div>
+    <div class="meta">
+      <span>◎&nbsp;&nbsp;{{ routeLine() }}</span>
+      <span>▢&nbsp;&nbsp;CARNET 026</span>
+    </div>
+    <a class="cta" routerLink="/sac/preparer">PRÉPARER MON SAC <span>→</span></a>
+    <div class="stats">
+      <span>{{ trip.days() }} <small>JOURS</small></span
+      ><i></i> <span>{{ trip.count() }} <small>OBJETS</small></span
+      ><i></i>
+      <span>{{ kg() }} <small>KG</small></span>
+    </div>
+  </div>
+</section>
+
+<section class="steps">
+  <h2 class="caps-muted">LE SAC EN 3 ÉTAPES</h2>
+  @for (step of steps; track step.n) {
+    <a [routerLink]="step.link">
+      <span class="n">{{ step.n }}</span>
+      <span class="text">
+        <span class="t">{{ step.title }}</span>
+        <span class="d">{{ step.desc }}</span>
+      </span>
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+  }
+</section>

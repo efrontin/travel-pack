@@ -1,0 +1,76 @@
+<div class="screen">
+  <app-page-header label="PRÉPARATION">01 / 03</app-page-header>
+
+  <div class="intro">
+    <h1 class="screen-title">Où partez-vous ?</h1>
+    <p class="lede">Trois réponses suffisent pour une première liste. Vous l'ajusterez ensuite.</p>
+  </div>
+
+  <fieldset class="field">
+    <legend class="caps-muted">DESTINATION</legend>
+    <div class="dests">
+      @for (d of dests; track d.id) {
+        <button
+          type="button"
+          [class.on]="d.id === trip.destId()"
+          [attr.aria-pressed]="d.id === trip.destId()"
+          (click)="trip.setDest(d.id)"
+        >
+          <span class="name">{{ d.name }}</span>
+          <span class="lat">{{ d.lat }}</span>
+        </button>
+      }
+    </div>
+  </fieldset>
+
+  <div class="field">
+    <div class="days">
+      <label class="caps-muted" for="days">DURÉE</label>
+      <span>{{ trip.days() }} jours</span>
+    </div>
+    <input id="days" type="range" min="2" max="30" [value]="trip.days()" (input)="onDays($event)" />
+    <div class="scale"><span>2 j</span><span>lessive au-delà de 7 j</span><span>30 j</span></div>
+  </div>
+
+  <fieldset class="field">
+    <legend class="caps-muted">CLIMAT</legend>
+    <div class="chips">
+      @for (c of climates; track c.id) {
+        <button
+          appChip
+          tone="copper"
+          type="button"
+          class="clim"
+          [active]="c.id === trip.clim()"
+          (click)="trip.setClim(c.id)"
+        >
+          {{ c.label }}
+        </button>
+      }
+    </div>
+  </fieldset>
+
+  <fieldset class="field" role="radiogroup">
+    <legend class="caps-muted">SAC</legend>
+    @for (b of bags; track b.id) {
+      <button
+        type="button"
+        class="bag"
+        role="radio"
+        [class.on]="b.id === trip.bagId()"
+        [attr.aria-checked]="b.id === trip.bagId()"
+        (click)="trip.setBag(b.id)"
+      >
+        <span class="bag-text">
+          <span>{{ b.name }}</span>
+          <small>{{ b.spec }}</small>
+        </span>
+        <i></i>
+      </button>
+    }
+  </fieldset>
+
+  <button appPill type="button" (click)="generate()">
+    <span>Générer ma liste</span><span class="preview">{{ preview() }} →</span>
+  </button>
+</div>

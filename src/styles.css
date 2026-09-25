@@ -1,1 +1,207 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --paper: #f1ece3;
+  --paper-2: #e8e1d4;
+  --paper-3: #e1d9ca;
+  --ink: #1d211e;
+  --ink-2: #3c3f3a;
+  --muted: #6f6a60;
+  --muted-2: #8a8477;
+  --forest: #1f3b33;
+  --forest-hover: #2c4d42;
+  --forest-deep: #1b3029;
+  --copper: #c26b35;
+  --copper-hover: #d27a42;
+  --copper-text: #9c5325;
+  --copper-light: #e3a57c;
+  --over: #b4541f;
+  --rule: #d9d1c2;
+  --rule-soft: #ded6c7;
+  --border: #cbc2b1;
+  --check-ring: #a39a88;
+  --on-dark: #f5f0e6;
+
+  --serif: 'Newsreader', Georgia, serif;
+  --sans: 'Instrument Sans', system-ui, sans-serif;
+  --gutter: 24px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: var(--sans);
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--forest);
+}
+
+a:hover {
+  color: var(--copper);
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 2px;
+}
+
+@keyframes fm-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Écran : marges, colonne verticale, animation d'entrée. */
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px var(--gutter) 28px;
+  animation: fm-in 0.25s ease;
+}
+
+/* Libellé en capitales. */
+.caps {
+  font: 600 10px var(--sans);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.caps-muted {
+  font: 600 10px var(--sans);
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+
+/* En-tête de section souligné d'un filet encre. */
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ink);
+  font: 600 10px var(--sans);
+  letter-spacing: 0.18em;
+}
+
+.section-head span + span {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.screen-title {
+  font: 400 36px/1.05 var(--serif);
+}
+
+.lede {
+  font: 400 15px/1.45 var(--serif);
+  color: var(--ink-2);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Carte Leaflet (DOM hors encapsulation Angular). */
+.fm-map {
+  background: #e4ddcf;
+}
+
+.fm-map .leaflet-tile-pane {
+  filter: sepia(0.45) saturate(0.55) brightness(1.03);
+}
+
+.fm-map .leaflet-control-attribution {
+  font: 9px var(--sans);
+  background: rgba(241, 236, 227, 0.85);
+  color: var(--muted);
+}
+
+.fm-map .leaflet-control-attribution a {
+  color: var(--muted);
+}
+
+.fm-marker {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--forest);
+  border: 2px solid var(--paper);
+  color: var(--on-dark);
+  font: 600 11px var(--sans);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leaflet-tooltip.fm-tip {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0 0 0 2px;
+  font: 600 10px/1.35 var(--sans);
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  text-shadow:
+    0 0 3px var(--paper),
+    0 0 3px var(--paper);
+}
+
+.leaflet-tooltip.fm-tip::before {
+  display: none;
+}
+
+.fm-tip small {
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+@media print {
+  app-tab-bar,
+  app-toast {
+    display: none !important;
+  }
+}

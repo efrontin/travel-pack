@@ -1,0 +1,58 @@
+<div class="screen">
+  <app-page-header label="MA LISTE" back="/sac/preparer">02 / 03</app-page-header>
+
+  <div class="intro">
+    <div class="title">
+      <h1>{{ trip.dest().name }}</h1>
+      <span>/ {{ trip.days() }} JOURS · {{ trip.clim().toUpperCase() }}</span>
+    </div>
+    <p class="lede">Cochez chaque objet au moment où il entre dans le sac.</p>
+  </div>
+
+  <div class="progress">
+    <div class="progress-text">
+      <span>{{ trip.checkedCount() }} / {{ trip.count() }} emballés</span>
+      <span class="kg">{{ kg() }} kg</span>
+    </div>
+    <div
+      class="track"
+      role="progressbar"
+      aria-label="Objets emballés"
+      [attr.aria-valuenow]="trip.checkedCount()"
+      aria-valuemin="0"
+      [attr.aria-valuemax]="trip.count()"
+    >
+      <div [style.width.%]="progress()"></div>
+    </div>
+  </div>
+
+  @for (g of groups(); track g.name) {
+    <section>
+      <h2 class="section-head">
+        <span>{{ g.name }}</span
+        ><span>{{ g.kg }} kg</span>
+      </h2>
+      @for (it of g.items; track it.id) {
+        <button
+          type="button"
+          class="item"
+          role="checkbox"
+          [class.on]="it.on"
+          [attr.aria-checked]="it.on"
+          (click)="trip.toggleChecked(it.id)"
+        >
+          <span class="ring">{{ it.on ? '✓' : '' }}</span>
+          <span class="label">{{ it.label }}</span>
+          <span class="w">{{ it.g }} g</span>
+        </button>
+      }
+    </section>
+  } @empty {
+    <p class="lede empty">Votre liste est vide. Générez-la ou ajoutez du matériel.</p>
+  }
+
+  <div class="actions">
+    <a appPill variant="outline" compact routerLink="/equipement">+ Ajouter</a>
+    <a appPill compact class="wide" routerLink="/sac/repartition">Voir la répartition →</a>
+  </div>
+</div>

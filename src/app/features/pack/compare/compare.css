@@ -1,0 +1,77 @@
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+h1 {
+  font: 400 30px/1.1 var(--serif);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-top: 1px solid var(--ink);
+}
+
+th,
+td {
+  padding: 12px 10px 12px 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  padding-top: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ink);
+  font-weight: 400;
+}
+
+td {
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+th span,
+td span {
+  display: block;
+}
+
+.k {
+  margin-bottom: 4px;
+  font: 600 9px var(--sans);
+  letter-spacing: 0.16em;
+  color: var(--muted);
+}
+
+.k.current {
+  color: var(--copper-text);
+}
+
+.name {
+  font: 400 18px/1.15 var(--serif);
+}
+
+.label {
+  margin-bottom: 3px;
+  font: 500 9px var(--sans);
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.v {
+  font: 400 16px var(--sans);
+  color: var(--muted);
+}
+
+.best .v {
+  font-weight: 600;
+  color: var(--forest);
+}
