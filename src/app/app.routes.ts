@@ -23,5 +23,15 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/journal/entry/journal-entry').then((m) => m.JournalEntry),
   },
+  {
+    path: 'sac',
+    children: [
+      {
+        path: 'preparer',
+        title: 'Préparation · Travel Field Manual',
+        loadComponent: () => import('./features/pack/prep/prep').then((m) => m.Prep),
+      },
+    ],
+  },
   { path: '**', redirectTo: '' },
 ];
