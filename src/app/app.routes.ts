@@ -12,5 +12,10 @@ export const routes: Routes = [
     title: 'Itinéraire · Travel Field Manual',
     loadComponent: () => import('./features/route/route').then((m) => m.RoutePage),
   },
+  {
+    path: 'carnet',
+    title: 'Carnet de voyage · Travel Field Manual',
+    loadComponent: () => import('./features/journal/list/journal-list').then((m) => m.JournalList),
+  },
   { path: '**', redirectTo: '' },
 ];
