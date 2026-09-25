@@ -49,5 +49,10 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'equipement',
+    title: 'Équipement · Travel Field Manual',
+    loadComponent: () => import('./features/gear/catalog/catalog').then((m) => m.Catalog),
+  },
   { path: '**', redirectTo: '' },
 ];
