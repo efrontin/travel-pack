@@ -22,11 +22,14 @@ describe('App', () => {
     expect(labels).toEqual(['Accueil', 'Itinéraire', 'Mon sac', 'Équipement', 'Carnet']);
   });
 
-  it('shows toasts', async () => {
+  it('opens the menu overlay and shows toasts', async () => {
     const fixture = TestBed.createComponent(App);
-    TestBed.inject(UiStore).flash('Liste copiée');
+    const ui = TestBed.inject(UiStore);
+    ui.menuOpen.set(true);
+    ui.flash('Liste copiée');
     await fixture.whenStable();
     const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('app-menu')?.textContent).toContain('SACHEZ CE QUE VOUS PORTEZ.');
     expect(el.querySelector('app-toast')?.textContent).toContain('Liste copiée');
   });
 });

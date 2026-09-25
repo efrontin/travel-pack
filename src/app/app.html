@@ -4,4 +4,7 @@
   </main>
   <app-tab-bar />
   <app-toast />
+  @if (ui.menuOpen()) {
+    <app-menu />
+  }
 </div>

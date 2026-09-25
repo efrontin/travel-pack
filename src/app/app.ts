@@ -2,11 +2,12 @@ import { Component, DestroyRef, ElementRef, inject, viewChild } from '@angular/c
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { UiStore } from './core/state/ui.store';
+import { Menu } from './features/menu/menu';
 import { TabBar } from './shared/tab-bar/tab-bar';
 import { Toast } from './shared/toast/toast';
 
 @Component({
-  imports: [RouterOutlet, TabBar, Toast],
+  imports: [RouterOutlet, TabBar, Toast, Menu],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
