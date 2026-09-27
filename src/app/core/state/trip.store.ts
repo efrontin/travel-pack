@@ -1,44 +1,19 @@
-import { computed, effect, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { BAGS, bagById, CABIN_LIMIT_KG } from '../data/bags';
 import { Climate, ITEMS, suggest } from '../data/items';
 import { DestinationId, DESTS } from '../data/places';
-import { loadJson, saveJson } from '../utils/storage';
+import { DEFAULT_TRIP, TripState } from '../data/trip';
+import { DataRepository } from '../db/data-repository';
+import { WriteQueue } from '../db/write-queue';
 import { itemsWeight, load } from '../utils/weight';
-
-const STORAGE_KEY = 'fm-trip-v1';
-
-export interface TripState {
-  dest: DestinationId;
-  days: number;
-  clim: Climate;
-  bagId: string;
-  included: string[];
-  checked: string[];
-  cmpBagId: string;
-}
-
-export const DEFAULT_TRIP: TripState = {
-  dest: 'tokyo',
-  days: 10,
-  clim: 'humide',
-  bagId: 'b30',
-  included: suggest('humide'),
-  checked: ['passeport', 'ordi', 'gan', 'merinos'],
-  cmpBagId: 'b24',
-};
-
-const isTrip = (v: unknown): boolean =>
-  !!v &&
-  typeof v === 'object' &&
-  (v as TripState).dest in DESTS &&
-  Array.isArray((v as TripState).included) &&
-  Array.isArray((v as TripState).checked);
 
 const clampDays = (d: number) => Math.min(30, Math.max(2, Math.round(d)));
 
 @Injectable({ providedIn: 'root' })
 export class TripStore {
-  private readonly state = signal<TripState>(loadJson(STORAGE_KEY, DEFAULT_TRIP, isTrip));
+  private readonly repo = inject(DataRepository);
+  private readonly queue = inject(WriteQueue);
+  private readonly state = signal<TripState>(DEFAULT_TRIP);
 
   readonly destId = computed(() => this.state().dest);
   readonly days = computed(() => this.state().days);
@@ -75,8 +50,9 @@ export class TripStore {
       ) + this.bag().w,
   );
 
-  constructor() {
-    effect(() => saveJson(STORAGE_KEY, this.state()));
+  /** Charge l'état enregistré (sans le réécrire). */
+  hydrate(trip: TripState): void {
+    this.state.set(trip.dest in DESTS ? { ...DEFAULT_TRIP, ...trip } : DEFAULT_TRIP);
   }
 
   /** Change de destination et applique son climat par défaut. */
@@ -124,7 +100,9 @@ export class TripStore {
   }
 
   private patch(p: Partial<TripState>): void {
-    this.state.update((s) => ({ ...s, ...p }));
+    const next = { ...this.state(), ...p, updatedAt: Date.now() };
+    this.state.set(next);
+    this.queue.run(() => this.repo.saveTrip(next));
   }
 }
 

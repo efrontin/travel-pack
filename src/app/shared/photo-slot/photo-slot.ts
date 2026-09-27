@@ -1,30 +1,10 @@
-import { booleanAttribute, Component, computed, input, signal } from '@angular/core';
+import { booleanAttribute, Component, computed, inject, input, signal } from '@angular/core';
+import { PhotoStore } from '../../core/state/photo.store';
 
-const PREFIX = 'fm-photo-';
 const MAX_SIDE = 1280;
-/** Repli en mémoire quand localStorage refuse l'image (quota). */
-const memory = new Map<string, string>();
 
-function read(id: string): string {
-  try {
-    return localStorage.getItem(PREFIX + id) ?? memory.get(id) ?? '';
-  } catch {
-    return memory.get(id) ?? '';
-  }
-}
-
-function write(id: string, src: string): void {
-  memory.set(id, src);
-  try {
-    if (src) localStorage.setItem(PREFIX + id, src);
-    else localStorage.removeItem(PREFIX + id);
-  } catch {
-    // Quota dépassé : l'image reste en mémoire pour la session.
-  }
-}
-
-/** Réduit l'image au plus à MAX_SIDE px pour tenir dans localStorage. */
-function downscale(file: File): Promise<string> {
+/** Réduit l'image au plus à MAX_SIDE px (JPEG) pour limiter la place occupée. */
+function downscale(file: File): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
     const img = new Image();
@@ -35,7 +15,11 @@ function downscale(file: File): Promise<string> {
       canvas.height = Math.round(img.height * k);
       canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
-      resolve(canvas.toDataURL('image/jpeg', 0.82));
+      canvas.toBlob(
+        (blob) => (blob ? resolve(blob) : reject(new Error('Image illisible'))),
+        'image/jpeg',
+        0.82,
+      );
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
@@ -48,7 +32,7 @@ function downscale(file: File): Promise<string> {
 /**
  * Emplacement photo : bloc `--paper-3` légendé tant qu'il est vide.
  * Toucher pour choisir un fichier, glisser un fichier ou une image web, ou coller une URL.
- * L'image est gardée dans localStorage sous `fm-photo-<slotId>`.
+ * L'image est gardée dans la base de l'appareil (voir `PhotoStore`).
  */
 @Component({
   selector: 'app-photo-slot',
@@ -158,15 +142,12 @@ export class PhotoSlot {
   readonly compact = input(false, { transform: booleanAttribute });
 
   protected readonly dragging = signal(false);
-  private readonly version = signal(0);
-  protected readonly src = computed(() => {
-    this.version();
-    return read(this.slotId());
-  });
+  private readonly photos = inject(PhotoStore);
+  protected readonly src = computed(() => this.photos.src(this.slotId()));
 
-  protected set(src: string): void {
-    write(this.slotId(), src);
-    this.version.update((v) => v + 1);
+  protected set(source: Blob | string): void {
+    if (source) this.photos.set(this.slotId(), source);
+    else this.photos.remove(this.slotId());
   }
 
   protected async pick(input: HTMLInputElement): Promise<void> {

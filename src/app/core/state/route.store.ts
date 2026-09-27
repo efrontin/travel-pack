@@ -1,13 +1,14 @@
-import { computed, effect, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { DEFAULT_STAGES, PLACES, Stage } from '../data/places';
+import { DataRepository } from '../db/data-repository';
+import { WriteQueue } from '../db/write-queue';
 import { haversine } from '../utils/geo';
-import { loadJson, saveJson } from '../utils/storage';
-
-const STORAGE_KEY = 'fm-route-v1';
 
 @Injectable({ providedIn: 'root' })
 export class RouteStore {
-  private readonly all = signal<Stage[]>(loadJson(STORAGE_KEY, DEFAULT_STAGES, Array.isArray));
+  private readonly repo = inject(DataRepository);
+  private readonly queue = inject(WriteQueue);
+  private readonly all = signal<Stage[]>(DEFAULT_STAGES);
 
   /** Étapes dont le lieu est connu. */
   readonly stages = computed(() => this.all().filter((s) => PLACES[s.place]));
@@ -26,19 +27,29 @@ export class RouteStore {
   );
   readonly placeNames = computed(() => this.stages().map((s) => PLACES[s.place].name));
 
-  constructor() {
-    effect(() => saveJson(STORAGE_KEY, this.all()));
+  /** Charge l'itinéraire enregistré (sans le réécrire). */
+  hydrate(stages: Stage[]): void {
+    this.all.set(stages);
   }
 
   add(place: string): void {
-    this.all.update((l) => [...l, { id: 's' + Date.now(), place, days: 2 }]);
+    this.save([...this.all(), { id: crypto.randomUUID(), place, days: 2, updatedAt: Date.now() }]);
   }
 
   remove(id: string): void {
-    this.all.update((l) => l.filter((s) => s.id !== id));
+    this.save(this.all().filter((s) => s.id !== id));
   }
 
   setDays(id: string, days: number): void {
-    this.all.update((l) => l.map((s) => (s.id === id ? { ...s, days: Math.max(1, days) } : s)));
+    this.save(
+      this.all().map((s) =>
+        s.id === id ? { ...s, days: Math.max(1, days), updatedAt: Date.now() } : s,
+      ),
+    );
+  }
+
+  private save(stages: Stage[]): void {
+    this.all.set(stages);
+    this.queue.run(() => this.repo.saveStages(stages));
   }
 }
