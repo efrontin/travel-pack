@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UiStore } from '../../core/state/ui.store';
 import { Logo } from '../../shared/logo/logo';
+import { BackupPanel } from './backup-panel';
 
 const ENTRIES = [
   { label: 'ACCUEIL', link: '/' },
@@ -17,7 +18,7 @@ const ENTRIES = [
 /** Menu plein écran (overlay, pas une route). */
 @Component({
   selector: 'app-menu',
-  imports: [RouterLink, Logo],
+  imports: [RouterLink, Logo, BackupPanel],
   template: `
     <div class="top">
       <app-logo />
@@ -38,6 +39,7 @@ const ENTRIES = [
         </a>
       }
     </nav>
+    <app-backup-panel />
     <footer>
       <span>NE VOYAGEZ PAS SEULEMENT.<br />SACHEZ CE QUE VOUS PORTEZ.</span>
       <i></i>
