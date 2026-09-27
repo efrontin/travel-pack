@@ -66,10 +66,12 @@ export interface Stage {
   id: string;
   place: string;
   days: number;
+  /** Horodatage de la dernière modification (ms), utile à une future synchronisation. */
+  updatedAt: number;
 }
 
 export const DEFAULT_STAGES: Stage[] = [
-  { id: 's1', place: 'tokyo', days: 7 },
-  { id: 's2', place: 'nagano', days: 5 },
-  { id: 's3', place: 'kusatsu', days: 2 },
+  { id: 's1', place: 'tokyo', days: 7, updatedAt: 0 },
+  { id: 's2', place: 'nagano', days: 5, updatedAt: 0 },
+  { id: 's3', place: 'kusatsu', days: 2, updatedAt: 0 },
 ];

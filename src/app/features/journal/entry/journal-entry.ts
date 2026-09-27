@@ -1,6 +1,5 @@
 import { Component, computed, effect, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
-import { JournalEntry as Entry } from '../../../core/data/seed-journal';
 import { JournalStore } from '../../../core/state/journal.store';
 import { RouteStore } from '../../../core/state/route.store';
 import { UiStore } from '../../../core/state/ui.store';
@@ -36,7 +35,7 @@ export class JournalEntry {
     });
   }
 
-  protected set(field: keyof Omit<Entry, 'id'>, event: Event): void {
+  protected set(field: 'title' | 'date' | 'stage' | 'text', event: Event): void {
     const value = (event.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement)
       .value;
     this.journal.update(this.id(), { [field]: value });
