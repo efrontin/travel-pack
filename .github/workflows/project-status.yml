@@ -1,0 +1,41 @@
+name: Sync project status
+on:
+  issues:
+    types: [labeled, closed]
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Déplacer la carte
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+          ACTION: ${{ github.event.action }}
+          LABEL: ${{ github.event.label.name }}
+          ISSUE_NODE_ID: ${{ github.event.issue.node_id }}
+        run: |
+          if [ "$ACTION" = "closed" ]; then STATUS="Done"
+          else
+            case "$LABEL" in
+              needs-triage)    STATUS="Needs triage" ;;
+              needs-info)      STATUS="Needs info" ;;
+              ready-for-agent) STATUS="Ready for agent" ;;
+              ready-for-human) STATUS="Ready for human" ;;
+              *) exit 0 ;;
+            esac
+          fi
+
+          PROJECT_ID=PVT_kwHOAoFNt84BlHKu
+          FIELD_ID=PVTSSF_lAHOAoFNt84BlHKuzhj1Qbo
+
+          OPTION_ID=$(gh project field-list 5 --owner efrontin --format json \
+            --jq ".fields[] | select(.name==\"Status\") | .options[] | select(.name==\"$STATUS\") | .id")
+
+          # Idempotent : renvoie l'item existant, ou l'ajoute au projet
+          ITEM_ID=$(gh api graphql \
+            -f query='mutation($p:ID!,$c:ID!){addProjectV2ItemById(input:{projectId:$p,contentId:$c}){item{id}}}' \
+            -f p="$PROJECT_ID" -f c="$ISSUE_NODE_ID" \
+            --jq .data.addProjectV2ItemById.item.id)
+
+          gh project item-edit --id "$ITEM_ID" --project-id "$PROJECT_ID" \
+            --field-id "$FIELD_ID" --single-select-option-id "$OPTION_ID"
