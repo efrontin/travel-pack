@@ -1,59 +1,57 @@
-# TravelPack
+# Travel Field Manual
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.0.
+**Voyager léger. Aller loin.**
 
-## Development server
+Un carnet de voyage de poche : vous préparez un sac qui pèse le juste nécessaire, vous dessinez votre itinéraire sur la carte, et vous notez ce que vous vivez en chemin. Tout tient dans votre téléphone, même sans réseau.
 
-To start a local development server, run:
+**[Ouvrir l'application](https://efrontin.github.io/travel-pack/)**
 
-```bash
-ng serve
-```
+<p align="center">
+  <img src="docs/itineraire.png" alt="L'écran Itinéraire : une carte du Japon avec trois étapes reliées, et la liste des étapes en dessous" width="320" />
+</p>
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Ce que vous pouvez faire
 
-## Code scaffolding
+- **Préparer votre sac.** Choisissez la destination, la durée et le sac, et l'application vous suggère de quoi remplir. Elle pèse le tout au fil de vos choix, pour savoir si vous restez sous la limite de poids de la cabine.
+- **Cocher votre liste.** Une checklist avant le départ, pour ne rien oublier au fond du tiroir.
+- **Comparer deux sacs.** Le 24 litres suffit-il, ou faut-il prendre le 30 ? La comparaison répond côte à côte.
+- **Parcourir le catalogue d'équipement.** Sacs, technique, vêtements, photo, trousse et accessoires, avec le poids de chaque objet. Certains ont une fiche test : ce qu'on y aime, ce qu'on y aime moins, et un verdict.
+- **Tracer votre itinéraire.** Ajoutez des étapes, réglez le nombre de jours de chacune, et suivez le parcours et les distances sur la carte. Changez l'ordre des étapes en les faisant glisser par la poignée (≡), ou avec les boutons ↑ / ↓ au clavier.
+- **Tenir votre carnet.** Écrivez une fiche par étape et joignez-y vos photos.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## L'installer sur votre téléphone
 
-```bash
-ng generate component component-name
-```
+L'application s'installe comme une vraie app, sans passer par un magasin.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+**Sur iPhone** : ouvrez le lien dans Safari, touchez le bouton Partager, puis « Sur l'écran d'accueil ».
 
-```bash
-ng generate --help
-```
+**Sur Android** : ouvrez le lien dans Chrome, puis choisissez « Installer l'application » dans le menu.
 
-## Building
+Une fois installée, elle fonctionne sans connexion. Les tuiles de la carte s'enregistrent au fil de vos visites, donc les zones déjà consultées restent visibles hors ligne.
 
-To build the project run:
+## Vos données vous appartiennent
 
-```bash
-ng build
-```
+Il n'y a ni compte ni serveur. Tout ce que vous saisissez reste sur votre appareil.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Comme un téléphone peut être perdu, remplacé ou vidé, pensez à faire une **sauvegarde** de temps en temps : dans le menu, « Mes données » exporte un fichier JSON (photos comprises), que vous pouvez réimporter plus tard sur le même appareil ou un autre.
 
-## Running unit tests
+## Pour contribuer ou bricoler
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Le projet est une application [Angular](https://angular.dev) (composants autonomes et signaux), avec [Leaflet](https://leafletjs.com) pour la carte et [Dexie](https://dexie.org) pour stocker les données dans IndexedDB.
 
 ```bash
-ng e2e
+npm install
+npm start          # serveur de développement sur http://localhost:4200
+npm test           # tests unitaires (Vitest)
+npm run build      # build de production dans dist/
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Le service worker n'est actif que dans le build de production. Pour l'essayer, servez le dossier `dist/travel-pack/browser`.
 
-## Additional Resources
+### Pour se repérer
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- [`CONTEXT.md`](CONTEXT.md) explique le vocabulaire du projet (étape, lieu, itinéraire, note, fiche).
+- [`docs/adr/`](docs/adr) garde la trace des décisions d'architecture, par exemple pourquoi les données sont dans IndexedDB.
+- Les idées et les tâches vivent dans les [issues](https://github.com/efrontin/travel-pack/issues), suivies dans un projet GitHub.
+
+Une idée, un bug, une question ? Ouvrez une issue : elle sera la bienvenue.
