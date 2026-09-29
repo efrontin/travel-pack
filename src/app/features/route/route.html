@@ -2,15 +2,40 @@
 <app-route-map />
 
 <div class="body">
-  <div class="stages">
+  <div
+    class="stages"
+    cdkDropList
+    cdkDropListLockAxis="y"
+    (cdkDropListSorted)="sorted($event)"
+    (cdkDropListDropped)="dropped($event)"
+  >
     @for (stage of rows(); track stage.id) {
-      <div class="stage">
+      <div class="stage" cdkDrag cdkDragPreviewContainer="parent" [cdkDragData]="stage.id">
+        <span class="handle" cdkDragHandle aria-hidden="true">≡</span>
         <span class="n">{{ stage.n }}</span>
         <span class="name">
           <span>{{ stage.name }}</span>
           <small>{{ stage.sub }}</small>
         </span>
         <span class="actions">
+          <button
+            type="button"
+            class="move"
+            [attr.aria-label]="'Monter ' + stage.name"
+            [disabled]="stage.n === 1"
+            (click)="route.move(stage.id, stage.n - 2)"
+          >
+            ↑
+          </button>
+          <button
+            type="button"
+            class="move"
+            [attr.aria-label]="'Descendre ' + stage.name"
+            [disabled]="stage.n === rows().length"
+            (click)="route.move(stage.id, stage.n)"
+          >
+            ↓
+          </button>
           <app-stepper [value]="stage.days" (valueChange)="route.setDays(stage.id, $event)" />
           <button
             type="button"

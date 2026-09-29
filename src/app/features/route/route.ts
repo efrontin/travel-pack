@@ -1,3 +1,10 @@
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDragSortEvent,
+  CdkDropList,
+} from '@angular/cdk/drag-drop';
 import { Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { PLACES } from '../../core/data/places';
@@ -14,7 +21,7 @@ import { RouteMap } from './route-map';
 
 @Component({
   selector: 'app-route',
-  imports: [PageHeader, RouteMap, Stepper, Chip, PillButton],
+  imports: [PageHeader, RouteMap, Stepper, Chip, PillButton, CdkDropList, CdkDrag, CdkDragHandle],
   templateUrl: './route.html',
   styleUrl: './route.css',
 })
@@ -27,8 +34,9 @@ export class RoutePage {
 
   protected readonly count = computed(() => String(this.route.stages().length).padStart(2, '0'));
   protected readonly km = computed(() => Math.round(this.route.km()).toLocaleString('fr-FR'));
+  /** La liste garde l'ordre enregistré pendant un glisser : le CDK déplace les lignes lui-même. */
   protected readonly rows = computed(() =>
-    this.route.stages().map((s, i, all) => {
+    this.route.savedStages().map((s, i, all) => {
       const place = PLACES[s.place];
       const prev = i ? PLACES[all[i - 1].place] : null;
       return {
@@ -41,6 +49,19 @@ export class RoutePage {
       };
     }),
   );
+
+  protected sorted(event: CdkDragSortEvent<string>): void {
+    this.route.dragTo(event.item.data, event.currentIndex);
+  }
+
+  protected dropped(event: CdkDragDrop<string[]>): void {
+    if (!event.isPointerOverContainer) {
+      this.route.cancelDrag();
+      return;
+    }
+    this.route.dragTo(event.item.data, event.currentIndex);
+    this.route.drop();
+  }
 
   protected write(stage: string): void {
     const id = this.journal.add(stage);
