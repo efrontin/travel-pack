@@ -5,6 +5,9 @@ on:
 
 jobs:
   sync:
+    # Dépôt public : n'importe qui peut ouvrir puis fermer une issue.
+    # Seul le propriétaire déclenche la synchronisation (le secret n'est pas exposé aux autres).
+    if: github.event.sender.login == github.repository_owner
     runs-on: ubuntu-24.04
     steps:
       - name: Déplacer la carte
